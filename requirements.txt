@@ -1,0 +1,82 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# BORDER SURVEILLANCE SYSTEM - PYTHON DEPENDENCIES
+# ═══════════════════════════════════════════════════════════════════════════════
+# Classification: RESTRICTED
+# Organization: Border Security Force
+# Last Updated: 2026-01-02
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# INSTALLATION: pip install -r requirements.txt
+# 
+# NOTE: All packages can be installed offline by pre-downloading wheels.
+# For air-gapped installation, use: pip download -r requirements.txt -d ./wheels/
+# Then install with: pip install --no-index --find-links=./wheels/ -r requirements.txt
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CORE AI/ML - Local Object Detection (NO EXTERNAL API CALLS)
+# ─────────────────────────────────────────────────────────────────────────────
+ultralytics==8.0.196          # YOLOv8 - Local inference engine (CRITICAL)
+torch==2.0.1                  # PyTorch - Deep learning framework (CPU/CUDA)
+torchvision==0.15.2           # Computer vision utilities for PyTorch
+opencv-python==4.8.1.78       # OpenCV - Video/image processing
+numpy==1.24.3                 # Numerical computing
+pillow==10.0.1                # Image manipulation
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DATABASE & SECURITY - Encrypted Local Storage
+# ─────────────────────────────────────────────────────────────────────────────
+# Note: sqlcipher3 requires SQLCipher library to be installed on system
+# Alternative: Use pysqlcipher3 or standard sqlite3 with manual encryption
+pysqlcipher3==1.2.0           # Encrypted SQLite (requires SQLCipher)
+cryptography==41.0.4          # Encryption utilities (AES, Fernet)
+bcrypt==4.0.1                 # Password hashing (secure)
+pycryptodome==3.19.0          # Additional crypto primitives
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEB DASHBOARD - Local Streamlit Interface
+# ─────────────────────────────────────────────────────────────────────────────
+streamlit==1.28.0             # Web dashboard framework (runs locally)
+streamlit-folium==0.15.0      # Map integration for Streamlit
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MAPS & VISUALIZATION - Offline Capable
+# ─────────────────────────────────────────────────────────────────────────────
+folium==0.14.0                # Interactive maps (supports offline tiles)
+plotly==5.17.0                # Interactive charts
+matplotlib==3.8.0             # Static charts and plotting
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DATA PROCESSING
+# ─────────────────────────────────────────────────────────────────────────────
+pandas==2.1.1                 # Data manipulation and analysis
+python-dateutil==2.8.2        # Date/time handling
+pytz==2023.3                  # Timezone support
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UTILITIES
+# ─────────────────────────────────────────────────────────────────────────────
+tqdm==4.66.1                  # Progress bars for long operations
+python-dotenv==1.0.0          # Environment variables (local .env files)
+pyyaml==6.0.1                 # YAML configuration files
+watchdog==3.0.0               # File system monitoring
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUDIO ALERTS (Optional - for audible threat notifications)
+# ─────────────────────────────────────────────────────────────────────────────
+pygame==2.5.2                 # Play alert sounds
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PDF EXPORT (Optional - for generating reports)
+# ─────────────────────────────────────────────────────────────────────────────
+reportlab==4.0.5              # Generate PDF reports
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TESTING (Development only)
+# ─────────────────────────────────────────────────────────────────────────────
+pytest==7.4.2                 # Unit testing framework
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# END OF DEPENDENCIES
+# ═══════════════════════════════════════════════════════════════════════════════

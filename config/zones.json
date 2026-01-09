@@ -1,0 +1,569 @@
+{
+    "_comment": "═══════════════════════════════════════════════════════════════════",
+    "_classification": "RESTRICTED - Border Zone Definitions",
+    "_organization": "Border Security Force",
+    "_last_updated": "2026-01-02",
+    "_description": "Defines border zones, sensitivity levels, and patrol areas",
+    "_warning": "Changes to zone definitions require supervisor approval",
+    
+    "grid_configuration": {
+        "columns": 6,
+        "rows": 5,
+        "column_labels": ["A", "B", "C", "D", "E", "F"],
+        "row_labels": ["1", "2", "3", "4", "5"],
+        "video_width": 640,
+        "video_height": 480,
+        "border_row": 3
+    },
+    
+    "zones": {
+        "A-1": {
+            "sensitivity": "critical",
+            "points": 5,
+            "terrain": "open_ground",
+            "distance_to_border_m": 500,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 8,
+            "description": "Enemy territory - northwest sector",
+            "risk_factors": ["frequent_crossing", "blind_spot"],
+            "camera_coverage": false
+        },
+        "B-1": {
+            "sensitivity": "critical",
+            "points": 5,
+            "terrain": "sparse_vegetation",
+            "distance_to_border_m": 450,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 7,
+            "description": "Enemy territory - north sector",
+            "risk_factors": ["cover_available"],
+            "camera_coverage": true
+        },
+        "C-1": {
+            "sensitivity": "critical",
+            "points": 5,
+            "terrain": "open_ground",
+            "distance_to_border_m": 400,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 9,
+            "description": "Enemy territory - north-central sector",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "D-1": {
+            "sensitivity": "critical",
+            "points": 5,
+            "terrain": "road_crossing",
+            "distance_to_border_m": 380,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 6,
+            "description": "Enemy territory - potential vehicle route",
+            "risk_factors": ["vehicle_access", "high_priority"],
+            "camera_coverage": true
+        },
+        "E-1": {
+            "sensitivity": "critical",
+            "points": 5,
+            "terrain": "sparse_vegetation",
+            "distance_to_border_m": 420,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 10,
+            "description": "Enemy territory - northeast sector",
+            "risk_factors": ["cover_available"],
+            "camera_coverage": true
+        },
+        "F-1": {
+            "sensitivity": "critical",
+            "points": 5,
+            "terrain": "dense_vegetation",
+            "distance_to_border_m": 480,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 12,
+            "description": "Enemy territory - far northeast",
+            "risk_factors": ["heavy_cover", "limited_visibility"],
+            "camera_coverage": false
+        },
+        
+        "A-2": {
+            "sensitivity": "high",
+            "points": 3,
+            "terrain": "open_ground",
+            "distance_to_border_m": 250,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 5,
+            "description": "Approach zone - northwest",
+            "risk_factors": ["open_approach"],
+            "camera_coverage": true
+        },
+        "B-2": {
+            "sensitivity": "high",
+            "points": 3,
+            "terrain": "sparse_vegetation",
+            "distance_to_border_m": 220,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 4,
+            "description": "Approach zone - north",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "C-2": {
+            "sensitivity": "high",
+            "points": 3,
+            "terrain": "open_ground",
+            "distance_to_border_m": 200,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 5,
+            "description": "Approach zone - central",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "D-2": {
+            "sensitivity": "high",
+            "points": 3,
+            "terrain": "road_crossing",
+            "distance_to_border_m": 180,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 3,
+            "description": "Approach zone - main road approach",
+            "risk_factors": ["vehicle_access"],
+            "camera_coverage": true
+        },
+        "E-2": {
+            "sensitivity": "high",
+            "points": 3,
+            "terrain": "sparse_vegetation",
+            "distance_to_border_m": 210,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 7,
+            "description": "Approach zone - east",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "F-2": {
+            "sensitivity": "high",
+            "points": 3,
+            "terrain": "dense_vegetation",
+            "distance_to_border_m": 260,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 9,
+            "description": "Approach zone - far east",
+            "risk_factors": ["heavy_cover"],
+            "camera_coverage": false
+        },
+        
+        "A-3": {
+            "sensitivity": "medium",
+            "points": 2,
+            "terrain": "border_fence",
+            "distance_to_border_m": 0,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 3,
+            "description": "BORDER LINE - west checkpoint",
+            "risk_factors": ["border_crossing_point"],
+            "camera_coverage": true
+        },
+        "B-3": {
+            "sensitivity": "medium",
+            "points": 2,
+            "terrain": "border_fence",
+            "distance_to_border_m": 0,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 2,
+            "description": "BORDER LINE - west-central",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "C-3": {
+            "sensitivity": "medium",
+            "points": 2,
+            "terrain": "border_fence",
+            "distance_to_border_m": 0,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 3,
+            "description": "BORDER LINE - central checkpoint",
+            "risk_factors": ["main_crossing"],
+            "camera_coverage": true
+        },
+        "D-3": {
+            "sensitivity": "medium",
+            "points": 2,
+            "terrain": "border_gate",
+            "distance_to_border_m": 0,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 2,
+            "description": "BORDER LINE - main gate",
+            "risk_factors": ["vehicle_gate", "high_traffic"],
+            "camera_coverage": true
+        },
+        "E-3": {
+            "sensitivity": "medium",
+            "points": 2,
+            "terrain": "border_fence",
+            "distance_to_border_m": 0,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 4,
+            "description": "BORDER LINE - east-central",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "F-3": {
+            "sensitivity": "medium",
+            "points": 2,
+            "terrain": "border_fence",
+            "distance_to_border_m": 0,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 6,
+            "description": "BORDER LINE - east checkpoint",
+            "risk_factors": ["remote_location"],
+            "camera_coverage": true
+        },
+        
+        "A-4": {
+            "sensitivity": "normal",
+            "points": 1,
+            "terrain": "patrol_road",
+            "distance_to_border_m": 150,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 2,
+            "description": "Our territory - west patrol route",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "B-4": {
+            "sensitivity": "normal",
+            "points": 1,
+            "terrain": "open_ground",
+            "distance_to_border_m": 180,
+            "nearest_patrol": "PATROL-D4",
+            "patrol_eta_minutes": 3,
+            "description": "Our territory - west-central",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "C-4": {
+            "sensitivity": "normal",
+            "points": 1,
+            "terrain": "patrol_road",
+            "distance_to_border_m": 200,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 2,
+            "description": "Our territory - central patrol route",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "D-4": {
+            "sensitivity": "normal",
+            "points": 1,
+            "terrain": "main_road",
+            "distance_to_border_m": 220,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 1,
+            "description": "Our territory - main access road",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "E-4": {
+            "sensitivity": "normal",
+            "points": 1,
+            "terrain": "open_ground",
+            "distance_to_border_m": 190,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 2,
+            "description": "Our territory - east",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "F-4": {
+            "sensitivity": "normal",
+            "points": 1,
+            "terrain": "observation_post",
+            "distance_to_border_m": 250,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 1,
+            "description": "Our territory - east observation post",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        
+        "A-5": {
+            "sensitivity": "low",
+            "points": 0,
+            "terrain": "base_camp",
+            "distance_to_border_m": 400,
+            "nearest_patrol": "PATROL-A1",
+            "patrol_eta_minutes": 1,
+            "description": "Safe zone - Alpha base",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "B-5": {
+            "sensitivity": "low",
+            "points": 0,
+            "terrain": "patrol_base",
+            "distance_to_border_m": 380,
+            "nearest_patrol": "PATROL-D4",
+            "patrol_eta_minutes": 1,
+            "description": "Safe zone - Delta patrol base",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "C-5": {
+            "sensitivity": "low",
+            "points": 0,
+            "terrain": "command_post",
+            "distance_to_border_m": 450,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 2,
+            "description": "Safe zone - Command post",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "D-5": {
+            "sensitivity": "low",
+            "points": 0,
+            "terrain": "patrol_base",
+            "distance_to_border_m": 420,
+            "nearest_patrol": "PATROL-B2",
+            "patrol_eta_minutes": 1,
+            "description": "Safe zone - Bravo patrol base",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "E-5": {
+            "sensitivity": "low",
+            "points": 0,
+            "terrain": "supply_depot",
+            "distance_to_border_m": 480,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 3,
+            "description": "Safe zone - Supply depot",
+            "risk_factors": [],
+            "camera_coverage": true
+        },
+        "F-5": {
+            "sensitivity": "low",
+            "points": 0,
+            "terrain": "helipad",
+            "distance_to_border_m": 500,
+            "nearest_patrol": "PATROL-C3",
+            "patrol_eta_minutes": 2,
+            "description": "Safe zone - Emergency helipad",
+            "risk_factors": [],
+            "camera_coverage": true
+        }
+    },
+    
+    "sensitivity_levels": {
+        "critical": {
+            "color": "#FF0000",
+            "base_points": 5,
+            "response_time_target_minutes": 5,
+            "alert_sound": "critical_alarm",
+            "auto_dispatch": true
+        },
+        "high": {
+            "color": "#FF6600",
+            "base_points": 3,
+            "response_time_target_minutes": 10,
+            "alert_sound": "high_priority",
+            "auto_dispatch": false
+        },
+        "medium": {
+            "color": "#FFCC00",
+            "base_points": 2,
+            "response_time_target_minutes": 15,
+            "alert_sound": "medium_priority",
+            "auto_dispatch": false
+        },
+        "normal": {
+            "color": "#00CC00",
+            "base_points": 1,
+            "response_time_target_minutes": 20,
+            "alert_sound": "normal",
+            "auto_dispatch": false
+        },
+        "low": {
+            "color": "#0066FF",
+            "base_points": 0,
+            "response_time_target_minutes": 30,
+            "alert_sound": "info",
+            "auto_dispatch": false
+        }
+    },
+    
+    "terrain_types": {
+        "open_ground": {
+            "visibility": "high",
+            "movement_speed": "fast",
+            "cover": "none",
+            "description": "Clear flat terrain with no obstructions"
+        },
+        "sparse_vegetation": {
+            "visibility": "medium",
+            "movement_speed": "medium",
+            "cover": "partial",
+            "description": "Light bushes and scattered trees"
+        },
+        "dense_vegetation": {
+            "visibility": "low",
+            "movement_speed": "slow",
+            "cover": "full",
+            "description": "Thick forest or heavy brush"
+        },
+        "road_crossing": {
+            "visibility": "high",
+            "movement_speed": "fast",
+            "cover": "none",
+            "description": "Paved or dirt road"
+        },
+        "border_fence": {
+            "visibility": "high",
+            "movement_speed": "slow",
+            "cover": "none",
+            "description": "Physical border barrier"
+        },
+        "border_gate": {
+            "visibility": "high",
+            "movement_speed": "medium",
+            "cover": "none",
+            "description": "Controlled crossing point"
+        },
+        "patrol_road": {
+            "visibility": "high",
+            "movement_speed": "fast",
+            "cover": "none",
+            "description": "Internal patrol route"
+        },
+        "main_road": {
+            "visibility": "high",
+            "movement_speed": "fast",
+            "cover": "none",
+            "description": "Primary access road"
+        },
+        "base_camp": {
+            "visibility": "high",
+            "movement_speed": "medium",
+            "cover": "structures",
+            "description": "Military base facility"
+        },
+        "patrol_base": {
+            "visibility": "high",
+            "movement_speed": "medium",
+            "cover": "structures",
+            "description": "Patrol unit staging area"
+        },
+        "command_post": {
+            "visibility": "medium",
+            "movement_speed": "slow",
+            "cover": "structures",
+            "description": "Command and control center"
+        },
+        "observation_post": {
+            "visibility": "high",
+            "movement_speed": "slow",
+            "cover": "structures",
+            "description": "Elevated observation point"
+        },
+        "supply_depot": {
+            "visibility": "medium",
+            "movement_speed": "slow",
+            "cover": "structures",
+            "description": "Supply storage facility"
+        },
+        "helipad": {
+            "visibility": "high",
+            "movement_speed": "fast",
+            "cover": "none",
+            "description": "Helicopter landing zone"
+        }
+    },
+    
+    "patrol_units": [
+        {
+            "id": "PATROL-A1",
+            "name": "Alpha Unit",
+            "type": "vehicle",
+            "base_grid": "A-5",
+            "coverage_zones": ["A-1", "A-2", "A-3", "A-4", "A-5", "B-1", "B-2", "B-3"],
+            "status": "active",
+            "personnel_count": 4,
+            "vehicle_type": "Armored Jeep",
+            "radio_callsign": "ALPHA-1"
+        },
+        {
+            "id": "PATROL-B2",
+            "name": "Bravo Unit",
+            "type": "vehicle",
+            "base_grid": "D-5",
+            "coverage_zones": ["C-1", "C-2", "C-3", "C-4", "C-5", "D-1", "D-2", "D-3", "D-4", "D-5"],
+            "status": "active",
+            "personnel_count": 4,
+            "vehicle_type": "Armored Jeep",
+            "radio_callsign": "BRAVO-2"
+        },
+        {
+            "id": "PATROL-C3",
+            "name": "Charlie Unit",
+            "type": "foot",
+            "base_grid": "F-4",
+            "coverage_zones": ["E-1", "E-2", "E-3", "E-4", "E-5", "F-1", "F-2", "F-3", "F-4", "F-5"],
+            "status": "active",
+            "personnel_count": 6,
+            "vehicle_type": null,
+            "radio_callsign": "CHARLIE-3"
+        },
+        {
+            "id": "PATROL-D4",
+            "name": "Delta Unit",
+            "type": "vehicle",
+            "base_grid": "B-5",
+            "coverage_zones": ["B-4", "B-5", "C-4", "C-5"],
+            "status": "standby",
+            "personnel_count": 4,
+            "vehicle_type": "Armored Jeep",
+            "radio_callsign": "DELTA-4"
+        }
+    ],
+    
+    "border_posts": [
+        {
+            "id": "POST-001",
+            "name": "Border Post Alpha",
+            "grid": "C-3",
+            "type": "primary",
+            "personnel": 10,
+            "coordinates": {
+                "lat": 31.234,
+                "lon": 75.456
+            },
+            "facilities": ["checkpoint", "detention", "medical"],
+            "radio_callsign": "POST-ALPHA"
+        },
+        {
+            "id": "POST-002",
+            "name": "Border Post Bravo",
+            "grid": "A-3",
+            "type": "secondary",
+            "personnel": 5,
+            "coordinates": {
+                "lat": 31.234,
+                "lon": 75.448
+            },
+            "facilities": ["checkpoint"],
+            "radio_callsign": "POST-BRAVO"
+        },
+        {
+            "id": "POST-003",
+            "name": "Border Post Charlie",
+            "grid": "F-3",
+            "type": "secondary",
+            "personnel": 5,
+            "coordinates": {
+                "lat": 31.234,
+                "lon": 75.464
+            },
+            "facilities": ["checkpoint", "observation"],
+            "radio_callsign": "POST-CHARLIE"
+        }
+    ]
+}
