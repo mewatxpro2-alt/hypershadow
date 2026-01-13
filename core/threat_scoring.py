@@ -229,6 +229,81 @@ class ThreatScoringEngine:
         
         logger.info("ThreatScoringEngine initialized")
     
+    def calculate_threat_score(
+        self,
+        object_type: str,
+        zone_name: str = "A",
+        confidence: float = 0.5,
+        group_size: int = 1
+    ) -> Dict[str, Any]:
+        """
+        Simplified threat score calculation for quick assessments.
+        
+        This is a convenience method for the UI that returns a simple dict.
+        
+        Args:
+            object_type: Type of object detected (person, car, truck, etc.)
+            zone_name: Grid zone name (A, B, C, etc.)
+            confidence: Detection confidence (0.0 to 1.0)
+            group_size: Number of objects detected
+            
+        Returns:
+            Dict with threat_level, total_score, and color
+        """
+        # Base points for object type
+        type_points = THREAT_CLASS_POINTS.get(object_type.lower(), 1)
+        
+        # Zone modifier (border zones are more critical)
+        zone_modifiers = {
+            "A": 2, "B": 1, "C": 3, "D": 2, "E": 1, "F": 2,
+        }
+        zone_points = zone_modifiers.get(zone_name.upper(), 1)
+        
+        # Time factor (night is more suspicious)
+        hour = datetime.now().hour
+        if 0 <= hour < 6:
+            time_points = 3  # Night
+        elif 6 <= hour < 18:
+            time_points = 0  # Day
+        else:
+            time_points = 1  # Evening
+        
+        # Confidence factor
+        if confidence >= 0.9:
+            conf_points = 1
+        elif confidence >= 0.7:
+            conf_points = 0
+        else:
+            conf_points = -1
+        
+        # Group size factor
+        group_points = min(group_size - 1, 4)  # Max +4 for groups
+        
+        # Calculate total
+        total_score = type_points + zone_points + time_points + conf_points + group_points
+        
+        # Determine threat level
+        if total_score >= 8:
+            threat_level = "CRITICAL"
+            color = "#ff3333"
+        elif total_score >= 5:
+            threat_level = "HIGH"
+            color = "#ff8c00"
+        elif total_score >= 2:
+            threat_level = "MEDIUM"
+            color = "#ffd700"
+        else:
+            threat_level = "LOW"
+            color = "#4ade80"
+        
+        return {
+            "threat_level": threat_level,
+            "total_score": total_score,
+            "color": color,
+            "object_type": object_type,
+            "zone": zone_name,
+        }
+    
     def _load_zones(self) -> Dict[str, Any]:
         """Load zone definitions from JSON file."""
         try:

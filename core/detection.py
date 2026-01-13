@@ -834,3 +834,11 @@ if __name__ == "__main__":
         print(f"✗ Failed to initialize: {e}")
     
     print("\n" + "=" * 70)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ALIAS FOR BACKWARD COMPATIBILITY
+# ═══════════════════════════════════════════════════════════════════════════════
+# BorderDetector is an alias for DetectionEngine for compatibility with imports
+BorderDetector = DetectionEngine
+

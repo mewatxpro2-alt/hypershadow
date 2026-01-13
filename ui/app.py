@@ -205,7 +205,7 @@ def initialize_database() -> DatabaseManager:
     """
     try:
         db = DatabaseManager()
-        db.initialize_database()
+        db.initialize()
         return db
     except Exception as e:
         st.error(f"Failed to initialize database: {str(e)}")
@@ -393,7 +393,7 @@ def render_sidebar() -> Dict[str, Any]:
             font-size: 10px;
             color: #6e6e6e;
         ">
-            UTC: {datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}
+            UTC: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         </div>
         """, unsafe_allow_html=True)
         
@@ -486,30 +486,46 @@ def render_live_monitoring_page(
                             frame_detections = []
                             
                             if detector:
-                                detection_results = detector.process_frame(frame)
+                                detection_results = detector.detect_frame(frame, frame_number=frame_idx)
                                 
                                 # Score each detection
                                 for det in detection_results:
+                                    # Convert Detection object to dict if needed
+                                    if hasattr(det, 'to_dict'):
+                                        det_dict = det.to_dict()
+                                    elif hasattr(det, 'bbox'):
+                                        # It's a Detection object, access attributes directly
+                                        det_dict = {
+                                            "class_id": det.class_id,
+                                            "class_name": det.class_name,
+                                            "confidence": det.confidence,
+                                            "bbox": det.bbox,
+                                            "center": det.center,
+                                            "frame_number": det.frame_number,
+                                        }
+                                    else:
+                                        det_dict = det  # Already a dict
+                                    
                                     # Get grid reference
-                                    cx = (det["bbox"][0] + det["bbox"][2]) / 2
-                                    cy = (det["bbox"][1] + det["bbox"][3]) / 2
-                                    grid_ref = grid_system.pixel_to_grid(
-                                        int(cx), int(cy),
-                                        frame.shape[1], frame.shape[0]
-                                    )
+                                    bbox = det_dict["bbox"]
+                                    cx = (bbox[0] + bbox[2]) / 2
+                                    cy = (bbox[1] + bbox[3]) / 2
+                                    grid_cell = grid_system.pixel_to_grid(int(cx), int(cy))
+                                    # Handle both GridCell object and string returns
+                                    grid_ref = grid_cell.reference if hasattr(grid_cell, 'reference') else str(grid_cell)
                                     
                                     # Calculate threat score
                                     threat_info = threat_scorer.calculate_threat_score(
-                                        object_type=det["class_name"],
+                                        object_type=det_dict["class_name"],
                                         zone_name=grid_ref.split("-")[0] if grid_ref else "A",
-                                        confidence=det["confidence"]
+                                        confidence=det_dict["confidence"]
                                     )
                                     
-                                    det["grid_reference"] = grid_ref
-                                    det["threat_level"] = threat_info["threat_level"]
-                                    det["threat_score"] = threat_info["total_score"]
+                                    det_dict["grid_reference"] = grid_ref
+                                    det_dict["threat_level"] = threat_info["threat_level"]
+                                    det_dict["threat_score"] = threat_info["total_score"]
                                     
-                                    frame_detections.append(det)
+                                    frame_detections.append(det_dict)
                             
                             # Render frame with detections
                             video_player = VideoPlayerComponent()
@@ -517,7 +533,7 @@ def render_live_monitoring_page(
                                 frame,
                                 frame_detections,
                                 show_grid=True,
-                                timestamp=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                             )
                             
                             # Display frame
@@ -684,8 +700,8 @@ def render_video_analysis_page(
         with process_col2:
             confidence_threshold = st.slider(
                 "Confidence Threshold",
-                0.5, 1.0, 0.7,
-                help="Minimum confidence for detections"
+                0.1, 1.0, 0.30,
+                help="Minimum confidence for detections (lower = more detections)"
             )
         
         if uploaded_data and st.button("🔍 Start Analysis", use_container_width=True):
@@ -715,30 +731,44 @@ def render_video_analysis_page(
                     if frame_idx % frame_skip == 0:
                         # Run detection
                         if detector:
-                            detections = detector.process_frame(frame)
+                            detections = detector.detect_frame(frame, frame_number=frame_idx)
                             
                             for det in detections:
-                                if det["confidence"] >= confidence_threshold:
+                                # Convert Detection object to dict if needed
+                                if hasattr(det, 'to_dict'):
+                                    det_dict = det.to_dict()
+                                elif hasattr(det, 'bbox'):
+                                    det_dict = {
+                                        "class_id": det.class_id,
+                                        "class_name": det.class_name,
+                                        "confidence": det.confidence,
+                                        "bbox": det.bbox,
+                                        "center": det.center,
+                                        "frame_number": det.frame_number,
+                                    }
+                                else:
+                                    det_dict = det
+                                
+                                if det_dict["confidence"] >= confidence_threshold:
                                     # Calculate grid and threat
-                                    cx = (det["bbox"][0] + det["bbox"][2]) / 2
-                                    cy = (det["bbox"][1] + det["bbox"][3]) / 2
-                                    grid_ref = grid_system.pixel_to_grid(
-                                        int(cx), int(cy),
-                                        frame.shape[1], frame.shape[0]
-                                    )
+                                    bbox = det_dict["bbox"]
+                                    cx = (bbox[0] + bbox[2]) / 2
+                                    cy = (bbox[1] + bbox[3]) / 2
+                                    grid_cell = grid_system.pixel_to_grid(int(cx), int(cy))
+                                    grid_ref = grid_cell.reference if hasattr(grid_cell, 'reference') else str(grid_cell)
                                     
                                     threat_info = threat_scorer.calculate_threat_score(
-                                        object_type=det["class_name"],
+                                        object_type=det_dict["class_name"],
                                         zone_name=grid_ref.split("-")[0] if grid_ref else "A",
-                                        confidence=det["confidence"]
+                                        confidence=det_dict["confidence"]
                                     )
                                     
-                                    det["frame_idx"] = frame_idx
-                                    det["grid_reference"] = grid_ref
-                                    det["threat_level"] = threat_info["threat_level"]
-                                    det["threat_score"] = threat_info["total_score"]
+                                    det_dict["frame_idx"] = frame_idx
+                                    det_dict["grid_reference"] = grid_ref
+                                    det_dict["threat_level"] = threat_info["threat_level"]
+                                    det_dict["threat_score"] = threat_info["total_score"]
                                     
-                                    all_detections.append(det)
+                                    all_detections.append(det_dict)
                         
                         processed += 1
                     
@@ -873,6 +903,7 @@ def render_map_view_page() -> None:
     """, unsafe_allow_html=True)
     
     for post in BORDER_POSTS:
+        coords = f"{post.get('lat', 'N/A')}, {post.get('lon', 'N/A')}"
         st.markdown(f"""
         <div style="
             display: flex;
@@ -884,7 +915,7 @@ def render_map_view_page() -> None:
                 {post['name']}
             </span>
             <span style="font-family: 'Roboto Mono', monospace; font-size: 11px; color: #6e6e6e;">
-                {post['coordinates']}
+                {coords}
             </span>
         </div>
         """, unsafe_allow_html=True)
@@ -1051,7 +1082,22 @@ def main() -> None:
     # Check authentication
     auth = AuthManager()
     
-    if not auth.check_session():
+    # Check if auth bypass is enabled (DEV MODE)
+    auth_bypassed = st.session_state.get("auth_disabled", False)
+    
+    if auth_bypassed:
+        # Create a synthetic admin session if not already authenticated
+        if not auth.check_session():
+            bypass_user = {
+                "username": "bypass",
+                "role": "admin",
+                "clearance": "TOP_SECRET",
+                "session_token": "bypass-token",
+                "login_time": datetime.now().isoformat(),
+                "must_change_password": False,
+            }
+            auth.create_session(bypass_user)
+    elif not auth.check_session():
         # Show login page
         render_login_page()
         return

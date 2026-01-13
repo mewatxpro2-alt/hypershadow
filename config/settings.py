@@ -132,8 +132,8 @@ MODEL_CONFIG: Dict[str, Any] = {
     # Confidence threshold for detection filtering
     # Detections below this threshold are discarded
     # Range: 0.0 to 1.0 (higher = fewer but more confident detections)
-    # Recommended: 0.65-0.75 for border surveillance
-    "confidence_threshold": 0.70,
+    # Recommended: 0.25-0.40 for drone surveillance (objects may be distant)
+    "confidence_threshold": 0.30,
     
     # Intersection over Union threshold for Non-Maximum Suppression
     # Controls how much overlap is allowed between bounding boxes

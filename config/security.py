@@ -237,7 +237,88 @@ SESSION_CONFIG: Dict[str, Any] = {
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# SECTION 6: SECURITY FUNCTIONS
+# SECTION 6: SECURITY MANAGER CLASS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class SecurityManager:
+    """
+    Central security manager for cryptographic operations and access control.
+    
+    Provides:
+    - Password hashing and verification
+    - Encryption/decryption operations
+    - Token generation
+    - Permission checking
+    - Audit logging support
+    """
+    
+    def __init__(self):
+        """Initialize the security manager with configuration."""
+        self.password_policy = PASSWORD_POLICY
+        self.session_config = SESSION_CONFIG
+        self.roles = ROLES
+        self._encryption_key = None
+    
+    def hash_password(self, password: str) -> str:
+        """Hash a password using bcrypt."""
+        return hash_password(password)
+    
+    def verify_password(self, password: str, password_hash: str) -> bool:
+        """Verify a password against its hash."""
+        return verify_password(password, password_hash)
+    
+    def validate_password(self, password: str) -> Dict[str, Any]:
+        """Validate password against security policy."""
+        return validate_password_strength(password)
+    
+    def generate_token(self, length: int = 32) -> str:
+        """Generate a cryptographically secure token."""
+        return generate_secure_token(length)
+    
+    def has_permission(self, user_role: str, permission: str) -> bool:
+        """Check if a role has a specific permission."""
+        return has_permission(user_role, permission)
+    
+    def get_role_level(self, user_role: str) -> int:
+        """Get the privilege level of a role."""
+        return get_role_level(user_role)
+    
+    def get_encryption_key(self) -> bytes:
+        """Get or generate the encryption key."""
+        if self._encryption_key is None:
+            if CRYPTOGRAPHY_AVAILABLE and "CHANGE_THIS" not in DATABASE_ENCRYPTION_KEY:
+                self._encryption_key = DATABASE_ENCRYPTION_KEY.encode()
+            else:
+                self._encryption_key = generate_encryption_key()
+        return self._encryption_key
+    
+    def encrypt_data(self, data: str) -> bytes:
+        """Encrypt string data."""
+        if CRYPTOGRAPHY_AVAILABLE:
+            key = self.get_encryption_key()
+            f = Fernet(key)
+            return f.encrypt(data.encode())
+        else:
+            # Fallback: base64 encode (NOT secure, just for compatibility)
+            return base64.b64encode(data.encode())
+    
+    def decrypt_data(self, encrypted_data: bytes) -> str:
+        """Decrypt encrypted data."""
+        if CRYPTOGRAPHY_AVAILABLE:
+            key = self.get_encryption_key()
+            f = Fernet(key)
+            return f.decrypt(encrypted_data).decode()
+        else:
+            # Fallback: base64 decode
+            return base64.b64decode(encrypted_data).decode()
+    
+    def derive_key(self, password: str, salt: Optional[bytes] = None) -> bytes:
+        """Derive an encryption key from a password."""
+        return derive_key_from_password(password, salt)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECTION 7: SECURITY FUNCTIONS
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def generate_encryption_key() -> bytes:

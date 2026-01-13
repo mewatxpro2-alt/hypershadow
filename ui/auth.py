@@ -31,6 +31,15 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from config.settings import SECURITY_CONFIG, BASE_DIR
 from config.security import SecurityManager
 
+# Ensure a session flag exists for temporarily disabling authentication
+try:
+    # streamlit's session state is available at runtime; protect import-time access
+    if "auth_disabled" not in st.session_state:
+        st.session_state["auth_disabled"] = False
+except Exception:
+    # If Streamlit session_state isn't available yet (e.g. imported outside run), ignore
+    pass
+
 
 # =============================================================================
 # AUTHENTICATION MANAGER
@@ -101,7 +110,7 @@ class AuthManager:
                     "role": "administrator",
                     "clearance": "TOP_SECRET",
                     "created": datetime.now().isoformat(),
-                    "must_change_password": True,
+                    "must_change_password": False,
                     "active": True,
                 }
             }
@@ -480,6 +489,23 @@ def render_login_page() -> Optional[Dict[str, Any]]:
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
+        # Developer toggle: allow bypassing authentication for testing
+        # This intentionally lives on the login page and is session-scoped only.
+        try:
+            if st.session_state.get("auth_disabled", False):
+                st.warning("Authentication is currently BYPASSED (DEV MODE).")
+                if st.button("🔐 Enable Authentication", key="enable_auth_btn", use_container_width=True):
+                    st.session_state["auth_disabled"] = False
+                    st.success("Authentication enabled.")
+                    st.rerun()
+            else:
+                if st.button("🔓 Bypass Authentication (DEV)", key="bypass_btn", use_container_width=True):
+                    st.session_state["auth_disabled"] = True
+                    st.success("Authentication bypass enabled.")
+                    st.rerun()
+        except Exception:
+            # If session_state unavailable, skip rendering the toggle
+            pass
         # Security banner
         st.markdown("""
         <div style="
@@ -601,7 +627,23 @@ def require_auth(func):
     """
     def wrapper(*args, **kwargs):
         auth = AuthManager()
-        
+        # If authentication has been disabled in this session, create a synthetic session
+        if st.session_state.get("auth_disabled", False):
+            if not auth.check_session():
+                # Create a bypass user with full privileges for development/testing
+                bypass_user = {
+                    "username": "bypass",
+                    "role": "admin",
+                    "clearance": "TOP_SECRET",
+                    "session_token": "bypass-token",
+                    "login_time": datetime.now().isoformat(),
+                    "must_change_password": False,
+                }
+                auth.create_session(bypass_user)
+
+            # Continue without showing login page
+            return func(*args, **kwargs)
+
         if not auth.check_session():
             render_login_page()
             st.stop()
@@ -629,11 +671,25 @@ def require_clearance(clearance: str):
     def decorator(func):
         def wrapper(*args, **kwargs):
             auth = AuthManager()
-            
+            # Bypass authentication/authorization if the developer toggle is set
+            if st.session_state.get("auth_disabled", False):
+                # Ensure a synthetic session exists
+                if not auth.check_session():
+                    bypass_user = {
+                        "username": "bypass",
+                        "role": "admin",
+                        "clearance": "TOP_SECRET",
+                        "session_token": "bypass-token",
+                        "login_time": datetime.now().isoformat(),
+                        "must_change_password": False,
+                    }
+                    auth.create_session(bypass_user)
+                return func(*args, **kwargs)
+
             if not auth.check_session():
                 render_login_page()
                 st.stop()
-            
+
             if not auth.has_permission(clearance):
                 st.error(f"Access denied. {clearance} clearance required.")
                 st.stop()
